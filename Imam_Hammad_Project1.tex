@@ -1,7 +1,8 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage{mathtools}
 
-\title{AerE 161 - Project \#1}
+\title{Project \#1: Standard Atmosphere Table}
 \author{Hammad Imam}
 \date{February 23rd, 2018}
 
@@ -10,10 +11,81 @@
 \maketitle
 
 \section*{Table of Contents}
+
 \begin{enumerate}
+    \item Problem Statement
     \item Theory
+    \begin{enumerate}
+        \item Introduction
+        \item Geometric Altitude
+        \item Temperature
+        \item Density
+        \item Pressure
+    \end{enumerate}
     \item Solution
-    \item Discussion 
+    \item Discussion
 \end{enumerate}
+
+\section{Problem Statement}
+The purpose of this project was to generate a Standard Atmosphere Table, with values for the standard atmosphere from the troposphere to the stratosphere. The table outputs the geopotential altitude from 0 to 47km in steps of 1km, and uses those values to find the geometric altitude, and standard values for temperature, density, and pressure. Additionally, three graphs were generated, plotting temperature, density, and pressure all against the geopotential altitude. 
+
+\section{Theory}
+\subsection{Introduction}
+In this section, the methods of calculations for each calculated value will be explained. There are three parts of the atmosphere that all behave differently, so each subsection will explain what was done differently for each value. Any constants used in calculations will be expressed in the subsection that uses those constants. Every subsection will contain a short overview of the value, and then calculations for the value derived from the hydrostatic equation and equation of state. The calculations will all be either in terms of the geopotential altitude $h$, or of a previously calculated value.
+
+\subsection{Geometric Altitude, $h_g$, m}
+Geometric altitude $h_g$ is the "true" distance off the surface of the Earth, as opposed to geopotential altitude $h$ which is a "fictitious" altitude that represents the height with an assumption of constant gravitational acceleration $g_0$, as opposed to one that varies with the distance from the surface.\\
+Geometric altitude $h_g$ is related to geopotential altitude $h$ by the formula 
+\begin{align}
+    h_g &= \frac{h * r_E}{r_E - h}
+\end{align}
+where $r_E$ represents the radius of Earth, $6371.0008 km$. In the Standard Atmosphere Table, the geometric altitude is calculated directly from the stepped geopotential altitude.
+
+\subsection{Temperature, $T$, K}
+Temperature $T$ is displayed in the table in units Kelvin. The temperature first decreases in the troposphere, remains constant in the isothermal layer, and then rises again in the stratosphere. Layers where the temperature changes are referred to as "gradient layers." \\
+The equation given from the hydrostatic equation is as follows
+
+\begin{align*}
+    T &= T_1 + a(h - h_1)
+\end{align*}
+where $T_1$ is the temperature 1 lower than the value being calculated, $a$ is the lapse rate $\frac{dT}{dh}$, $h$ is the current height, and $h_1$ is the height 1 lower than the value being calculated. \\ 
+Since the equation depends on lower values of the temperature, an initial temperature is required to calculate higher values. $T_0$, the temperature at sea level, is given as 
+
+\begin{align*}
+    T_{0} &= 288.16 K \\
+\end{align*}
+The values for $a$, the lapse rate of the temperature, depend on the layer of atmosphere. The values are given below
+
+\begin{align*}
+    a &= \begin{cases}
+    -6.5\times10^{-3}\  K/m   & troposphere,\ h = [0,11] \\
+    0 \ K/m                  & isothermal,\ h = [12,24] \\
+    3\times10^{-3}\ K/m     & stratosphere,\ h = [25,47] \\
+    \end{cases}
+\end{align*}
+The values in the table are calculated in steps of 1km, so the value for $(h-h_1)$ will remain a constant 1km.\\
+Inserting these values into the original equation for temperature gives us the combined equation
+
+\begin{align}
+    T_h &= \begin{cases}
+    T_{h-1}\ K - (6.5\times10^{-3}\  K/m)(1km)    & troposphere,\ h = [0,11] \\
+    T_{h-1} \ K                                          & isothermal,\ h = [12,24] \\
+    T_{h-1}\ K + (3\times10^{-3}\ K/m)(1km)       & stratosphere,\ h = [25,47] \\
+    \end{cases}
+\end{align}
+
+\subsection{Density, $\rho$, kg/m$^3$}
+Density $\rho$ is displayed in the table in units kg/m$^3$. The rate of change is reliant on the ratio between the temperature at the current height, so a different formula must be used for the isothermal layer than from the gradient layers. The original equation is 
+
+\begin{align*}
+    \frac{\rho}{\rho_1} = {\left(\frac{T}{T_1}\right)}^{-\frac{g}{aR}-1}
+\end{align*}
+
+where gravitational acceleration $g = 9.81m/s^2$, lapse rate $a$ equals the values listed above, and $R = 287 \frac{J}{kg\ K}$. With some rearranging, the equation becomes 
+\begin{align*}
+    \rho_h = \rho_{h-1}{\left(\frac{T_h}{T_{h-1}}\right)}^{-\frac{g}{aR}-1}
+\end{align*}
+
+\subsection{Pressure, $p$, N/m}
 
 \end{document}
