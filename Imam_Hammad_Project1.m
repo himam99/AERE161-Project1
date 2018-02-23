@@ -1,14 +1,13 @@
 %Hammad Imam // himam@iastate.edu
 %AER_E 161 Project 1
 %February 23rd, 2018
-
 clear, clc;
 
 %initial values for each variable
 h_g = 0;
 T = 288.16;
 d = 1.225;
-p = 1.01325*10^5;
+p = 101325;
 
 %constants/etc that will be used in calculations
 a_t = -6.5*10^-3;
@@ -39,7 +38,7 @@ for h = 1:47
    
    T_0 = res(h,3);  %set the initial temp to the one above current row
    d_0 = res(h,4);  %same for density
-   p_0 = res(h,5);  %same for pressure
+   p_0 = res(h,5);  %same for pressure 
    
    h_g = (r_e*h)/(r_e - h);     %calculate geometric from geopotential
    T = T_0 + (a*1000);          %calculate temp from previous temp, a
@@ -61,21 +60,23 @@ disp(array2table(res,'VariableNames',{T_h,T_g,T_T,T_d,T_p}));
 
 %Geopotential Height vs Temperature
 figure
-plot(res(1:end, 3), res(1:end, 1),'.b-')
+plot(res(1:end, 1), res(1:end, 3),'.b-')
 xlabel(G_h);
 ylabel(G_T);
-title([G_h, ' vs. ', G_T])
+title([G_T, ' vs. ', G_h])
 
 %Geopotential Height vs Density
 figure
 plot(res(1:end, 1), res(1:end, 4),'.r-')
 xlabel(G_h);
 ylabel(G_d);
-title([G_h, ' vs. ', G_d])
+title([G_d, ' vs. ', G_h])
 
 %Geopotential Height vs Pressure
 figure
 plot(res(1:end, 1), res(1:end, 5),'.g-')
 xlabel(G_h);
 ylabel(G_p);
-title([G_h, ' vs. ', G_p])
+title([G_p, ' vs. ', G_h])
+
+%fin

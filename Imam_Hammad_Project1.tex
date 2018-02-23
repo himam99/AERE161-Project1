@@ -1,6 +1,13 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{color}
+
+\sloppy
+\definecolor{lightgray}{gray}{0.5}
+\setlength{\parindent}{0pt}
+
 
 \title{Project \#1: Standard Atmosphere Table}
 \author{Hammad Imam}
@@ -10,28 +17,32 @@
 
 \maketitle
 
+\tableofcontents
+
 \section*{Table of Contents}
 
-\begin{enumerate}
-    \item Problem Statement
-    \item Theory
-    \begin{enumerate}
-        \item Introduction
-        \item Geometric Altitude
-        \item Temperature
-        \item Density
-        \item Pressure
-    \end{enumerate}
-    \item Solution
-    \item Discussion
-\end{enumerate}
+
+%\begin{enumerate}
+%    \item Problem Statement
+%    \item Theory
+%    \begin{enumerate}
+%        \item Introduction
+%        \item Geometric Altitude
+%        \item Temperature
+%        \item Density
+%        \item Pressure
+%    \end{enumerate}
+%    \item Solution
+%    \item Discussion
+%\end{enumerate}
+
 
 \section{Problem Statement}
 The purpose of this project was to generate a Standard Atmosphere Table, with values for the standard atmosphere from the troposphere to the stratosphere. The table outputs the geopotential altitude from 0 to 47km in steps of 1km, and uses those values to find the geometric altitude, and standard values for temperature, density, and pressure. Additionally, three graphs were generated, plotting temperature, density, and pressure all against the geopotential altitude. 
 
 \section{Theory}
 \subsection{Introduction}
-In this section, the methods of calculations for each calculated value will be explained. There are three parts of the atmosphere that all behave differently, so each subsection will explain what was done differently for each value. Any constants used in calculations will be expressed in the subsection that uses those constants. Every subsection will contain a short overview of the value, and then calculations for the value derived from the hydrostatic equation and equation of state. The calculations will all be either in terms of the geopotential altitude $h$, or of a previously calculated value.
+In this section, the methods of calculations for each calculated value will be explained. There are three parts of the atmosphere that all behave differently, so each subsection will explain what was done differently for each value. Any constants used in calculations will be expressed in the subsection that uses those constants. Every subsection will contain a short overview of the value, and then calculations for the value derived from the hydrostatic equation and equation of state. The calculations will all be either in terms of the geopotential altitude $h$, or of a previously calculated value. All work and explanations will be shown, and final results for a formula will have a number displayed next to them.
 
 \subsection{Geometric Altitude, $h_g$, m}
 Geometric altitude $h_g$ is the "true" distance off the surface of the Earth, as opposed to geopotential altitude $h$ which is a "fictitious" altitude that represents the height with an assumption of constant gravitational acceleration $g_0$, as opposed to one that varies with the distance from the surface.\\
@@ -63,7 +74,7 @@ The values for $a$, the lapse rate of the temperature, depend on the layer of at
     3\times10^{-3}\ K/m     & stratosphere,\ h = [25,47] \\
     \end{cases}
 \end{align*}
-The values in the table are calculated in steps of 1km, so the value for $(h-h_1)$ will remain a constant 1km.\\
+The geopotential altitude in the table is calculated in steps of 1km, so the value for $(h-h_1)$ will remain a constant 1km.\\
 Inserting these values into the original equation for temperature gives us the combined equation
 
 \begin{align}
@@ -75,17 +86,139 @@ Inserting these values into the original equation for temperature gives us the c
 \end{align}
 
 \subsection{Density, $\rho$, kg/m$^3$}
-Density $\rho$ is displayed in the table in units kg/m$^3$. The rate of change is reliant on the ratio between the temperature at the current height, so a different formula must be used for the isothermal layer than from the gradient layers. The original equation is 
+Density $\rho$ is displayed in the table in units kg/m$^3$. The rate of change is reliant on the ratio between the temperature at the current height, so a different formula must be used for the isothermal layer than from the gradient layers. The original equations are 
 
 \begin{align*}
-    \frac{\rho}{\rho_1} = {\left(\frac{T}{T_1}\right)}^{-\frac{g}{aR}-1}
+    \frac{\rho}{\rho_1} &= {\left(\frac{T}{T_1}\right)}^{-\frac{g}{aR}-1} \\
+    \frac{\rho}{\rho_1} &= e^{\left(- \frac{g}{RT}\right)\left(h-h_1\right)}
 \end{align*}
 
-where gravitational acceleration $g = 9.81m/s^2$, lapse rate $a$ equals the values listed above, and $R = 287 \frac{J}{kg\ K}$. With some rearranging, the equation becomes 
+where gravitational acceleration $g = 9.81m/s^2$, lapse rate $a= -6.5\times10^{-3} K/m$ in the troposphere and $3\times10^{-3}K/m$ in the stratosphere, and $R = 287 \frac{J}{kg\ K}$. The first equation is used in the gradient layers, while the second equation is used in the isothermal layers. With some rearranging, the equations become
+
 \begin{align*}
-    \rho_h = \rho_{h-1}{\left(\frac{T_h}{T_{h-1}}\right)}^{-\frac{g}{aR}-1}
+    \rho_h &= \rho_{h-1}{\left(\frac{T_h}{T_{h-1}}\right)}^{-\frac{g}{aR}-1} \\
+    \rho_h &= \rho_{h-1}\left(e^{\left(- \frac{g}{RT}\right)\left(h-h_1\right)}\right)
 \end{align*}
+
+Since each value will be calculated, temperature values will be independently calculated in each row and used in the formula for density. Gravitational acceleration $g$, lapse rate $a$, and specific gas constant $R$ are all known values. The geopotential altitude in the table is calculated in steps of 1km, so the value for $(h-h_1)$ will remain a constant 1km. Subbing in all known values gives the equation 
+
+\begin{align}
+    \rho_h &= \begin{cases}
+    \rho_{h-1}{\left(\frac{T_h}{T_{h-1}}\right)}^{\frac{9.81 m/s^2}{6.5\times10^{-3}K/m\ 287 \frac{J}{kg\ K}}-1}    & troposphere,\ h = [0,11] \\
+    \rho_{h-1}\left(e^{\left(- \frac{9.81 m/s^2}{T_h * 287 \frac{J}{kg\ K} }\right)\left(1 km\right)}\right)                                          & isothermal,\ h = [12,24] \\
+    \rho_{h-1}{\left(\frac{T_h}{T_{h-1}}\right)}^{-\frac{9.81 m/s^2}{3\times10^{-3}K/m\ 287 \frac{J}{kg\ K}}-1}       & stratosphere,\ h = [25,47] \\
+    \end{cases}
+\end{align}
 
 \subsection{Pressure, $p$, N/m}
+Pressure $p$ is displayed in the table in units N/m. Similar to density, he rate of change is reliant on the ratio between the temperature at the current height, so a different formula must be used for the isothermal layer than from the gradient layers. The original equations are 
+
+\begin{align*}
+    \frac{p}{p_1} &= {\left(\frac{T}{T_1}\right)}^{-\frac{g}{aR}} \\
+    \frac{p}{p_1} &= e^{\left(- \frac{g}{RT}\right)\left(h-h_1\right)}
+\end{align*}
+
+where gravitational acceleration $g = 9.81m/s^2$, lapse rate $a= -6.5\times10^{-3} K/m$ in the troposphere and $3\times10^{-3}K/m$ in the stratosphere, and $R = 287 \frac{J}{kg\ K}$. The first equation is used in the gradient layers, while the second equation is used in the isothermal layers. Rearranged, the equations become 
+
+\begin{align*}
+    p &= p_{h-1}{\left(\frac{T_h}{T_{h-1}}\right)}^{-\frac{g}{aR}} \\
+    p_h &= p_{h-1}\left(e^{\left(- \frac{g}{RT}\right)\left(h-h_1\right)}\right)
+\end{align*}
+
+Since each value will be calculated, temperature values will be independently calculated in each row and used in the formula for pressure. Gravitational acceleration $g$, lapse rate $a$, and specific gas constant $R$ are all known values as listed above. The geopotential altitude in the table is calculated in steps of 1km, so the value for $(h-h_1)$ will remain a constant 1km. Replacing variables for all known values gives the equation
+
+\begin{align}
+    p_h &= \begin{cases}
+    p_{h-1}{\left(\frac{T_h}{T_{h-1}}\right)}^{\frac{9.81 m/s^2}{6.5\times10^{-3}K/m\ 287 \frac{J}{kg\ K}}}    & troposphere,\ h = [0,11] \\
+    p_{h-1}\left(e^{\left(- \frac{9.81 m/s^2}{T_h * 287 \frac{J}{kg\ K} }\right)\left(1 km\right)}\right)                                          & isothermal,\ h = [12,24] \\
+    p_{h-1}{\left(\frac{T_h}{T_{h-1}}\right)}^{-\frac{9.81 m/s^2}{3\times10^{-3}K/m\ 287 \frac{J}{kg\ K}}}       & stratosphere,\ h = [25,47] \\
+    \end{cases}
+\end{align}
+
+
+\section{Solution}
+
+\subsection{Overview}
+
+This section will contain the code used to generate the standard atmosphere table, the table itself, and the 3 plots of temperature $T$, density $\rho$, and pressure $p$ all against geopotential altitude $h$. The code section will 
+
+\subsection{Code}
+
+\subsection{Standard Atmopshere Table}
+        \color{black} \begin{verbatim}
+    Geopotential    Geometric    Temperature     Density      Pressure 
+    ____________    _________    ___________    _________    __________
+
+     0                   0       288.16             1.225    1.0133e+05
+     1              1.0002       281.66            1.1117         89880
+     2              2.0006       275.16            1.0066         79504
+     3              3.0014       268.66           0.90927         70120
+     4              4.0025       262.16           0.81932         61654
+     
+     5              5.0039       255.66           0.73633         54036
+     6              6.0057       249.16           0.65993         47198
+     7              7.0077       242.66           0.58974         41078
+     8              8.0101       236.16           0.52542         35617
+     9              9.0127       229.66            0.4666         30760
+    
+    10              10.016       223.16           0.41296         26453
+    11              11.019       216.66           0.36417         22648
+    12              12.023       216.66           0.31107         19345
+    13              13.027       216.66           0.26571         16524
+    14              14.031       216.66           0.22696         14115
+    
+    15              15.035       216.66           0.19387         12057
+    16               16.04       216.66            0.1656         10299
+    17              17.045       216.66           0.14145        8796.8
+    18              18.051       216.66           0.12082          7514
+    19              19.057       216.66            0.1032        6418.3
+    
+    20              20.063       216.66          0.088155        5482.4
+    21              21.069       216.66            0.0753          4683
+    22              22.076       216.66           0.06432        4000.1
+    23              23.083       216.66          0.054941        3416.8
+    24              24.091       216.66          0.046929        2918.6
+    
+    25              25.098       219.66          0.039581        2495.7
+    26              26.107       222.66          0.033461        2138.6
+    27              27.115       225.66          0.028351        1836.4
+    28              28.124       228.66          0.024074        1580.1
+    29              29.133       231.66          0.020485        1362.2
+    
+    30              30.142       234.66          0.017468        1176.6
+    31              31.152       237.66          0.014926        1018.2
+    32              32.162       240.66          0.012778        882.72
+    33              33.172       243.66          0.010961        766.62
+    34              34.182       246.66         0.0094197        666.94
+    
+    35              35.193       249.66         0.0081101         581.2
+    36              36.205       252.66          0.006995        507.31
+    37              37.216       255.66         0.0060438        443.53
+    38              38.228       258.66         0.0052309        388.37
+    39               39.24       261.66         0.0045348         340.6
+    
+    40              40.253       264.66         0.0039378        299.15
+    41              41.266       267.66         0.0034248        263.13
+    42              42.279       270.66         0.0029833        231.78
+    43              43.292       273.66         0.0026027        204.44
+    44              44.306       276.66          0.002274        180.58
+    
+    45               45.32       279.66         0.0019897        159.72
+    46              46.335       282.66         0.0017434        141.45
+    47              47.349       285.66         0.0015298        125.4
+\end{verbatim} \color{black}
+\subsection{Plots}
+\subsubsection{Temperature vs Geopotential Altitude}
+\includegraphics [width=4in]{Imam_Hammad_Project1_01.eps}
+
+\subsubsection{Density vs Geopotential Altitude}
+\includegraphics [width=4in]{Imam_Hammad_Project1_02.eps}
+
+\subsubsection{Pressure vs Geopotential Altitude}
+\includegraphics [width=4in]{Imam_Hammad_Project1_03.eps}
+
+\section{Discussion}
+\subsection{Analysis}
+\subsection{Challenges}
 
 \end{document}
