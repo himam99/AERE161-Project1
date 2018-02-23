@@ -2,40 +2,22 @@
 \usepackage[utf8]{inputenc}
 \usepackage{mathtools}
 \usepackage{graphicx}
-\usepackage{color}
+\usepackage{hyperref}
 
-\sloppy
-\definecolor{lightgray}{gray}{0.5}
 \setlength{\parindent}{0pt}
 
-
-\title{Project \#1: Standard Atmosphere Table}
-\author{Hammad Imam}
+\title{AerE 161 \\ Project \#1: Standard Atmosphere Table}
+\author{Hammad Imam \\ Undergraduate, Aerospace Engineering \\ Iowa State University}
 \date{February 23rd, 2018}
 
 \begin{document}
 
+\begin{titlepage}
 \maketitle
+\end{titlepage}
 
+\clearpage
 \tableofcontents
-
-\section*{Table of Contents}
-
-
-%\begin{enumerate}
-%    \item Problem Statement
-%    \item Theory
-%    \begin{enumerate}
-%        \item Introduction
-%        \item Geometric Altitude
-%        \item Temperature
-%        \item Density
-%        \item Pressure
-%    \end{enumerate}
-%    \item Solution
-%    \item Discussion
-%\end{enumerate}
-
 
 \section{Problem Statement}
 The purpose of this project was to generate a Standard Atmosphere Table, with values for the standard atmosphere from the troposphere to the stratosphere. The table outputs the geopotential altitude from 0 to 47km in steps of 1km, and uses those values to find the geometric altitude, and standard values for temperature, density, and pressure. Additionally, three graphs were generated, plotting temperature, density, and pressure all against the geopotential altitude. 
@@ -44,7 +26,7 @@ The purpose of this project was to generate a Standard Atmosphere Table, with va
 \subsection{Introduction}
 In this section, the methods of calculations for each calculated value will be explained. There are three parts of the atmosphere that all behave differently, so each subsection will explain what was done differently for each value. Any constants used in calculations will be expressed in the subsection that uses those constants. Every subsection will contain a short overview of the value, and then calculations for the value derived from the hydrostatic equation and equation of state. The calculations will all be either in terms of the geopotential altitude $h$, or of a previously calculated value. All work and explanations will be shown, and final results for a formula will have a number displayed next to them.
 
-\subsection{Geometric Altitude, $h_g$, m}
+\subsection{Geometric Altitude, \texorpdfstring{$h_g$}{}, m}
 Geometric altitude $h_g$ is the "true" distance off the surface of the Earth, as opposed to geopotential altitude $h$ which is a "fictitious" altitude that represents the height with an assumption of constant gravitational acceleration $g_0$, as opposed to one that varies with the distance from the surface.\\
 Geometric altitude $h_g$ is related to geopotential altitude $h$ by the formula 
 \begin{align}
@@ -52,7 +34,7 @@ Geometric altitude $h_g$ is related to geopotential altitude $h$ by the formula
 \end{align}
 where $r_E$ represents the radius of Earth, $6371.0008 km$. In the Standard Atmosphere Table, the geometric altitude is calculated directly from the stepped geopotential altitude.
 
-\subsection{Temperature, $T$, K}
+\subsection{Temperature, \texorpdfstring{$T$}{} , K}
 Temperature $T$ is displayed in the table in units Kelvin. The temperature first decreases in the troposphere, remains constant in the isothermal layer, and then rises again in the stratosphere. Layers where the temperature changes are referred to as "gradient layers." \\
 The equation given from the hydrostatic equation is as follows
 
@@ -85,7 +67,7 @@ Inserting these values into the original equation for temperature gives us the c
     \end{cases}
 \end{align}
 
-\subsection{Density, $\rho$, kg/m$^3$}
+\subsection{Density, \texorpdfstring{$\rho$}{}, kg/m\texorpdfstring{$^3$}{} }
 Density $\rho$ is displayed in the table in units kg/m$^3$. The rate of change is reliant on the ratio between the temperature at the current height, so a different formula must be used for the isothermal layer than from the gradient layers. The original equations are 
 
 \begin{align*}
@@ -110,7 +92,7 @@ Since each value will be calculated, temperature values will be independently ca
     \end{cases}
 \end{align}
 
-\subsection{Pressure, $p$, N/m}
+\subsection{Pressure, \texorpdfstring{$p$}{}, N/m}
 Pressure $p$ is displayed in the table in units N/m. Similar to density, he rate of change is reliant on the ratio between the temperature at the current height, so a different formula must be used for the isothermal layer than from the gradient layers. The original equations are 
 
 \begin{align*}
@@ -135,7 +117,7 @@ Since each value will be calculated, temperature values will be independently ca
     \end{cases}
 \end{align}
 
-
+\clearpage
 \section{Solution}
 
 \subsection{Overview}
@@ -150,7 +132,7 @@ This section will contain the code used to generate the standard atmosphere tabl
 
 \newpage
 \subsection{Standard Atmopshere Table}
-        \color{black} \begin{verbatim}
+        \begin{verbatim}
     Geopotential    Geometric    Temperature     Density      Pressure 
     ____________    _________    ___________    _________    __________
 
@@ -211,7 +193,7 @@ This section will contain the code used to generate the standard atmosphere tabl
     45               45.32       279.66         0.0019897        159.72
     46              46.335       282.66         0.0017434        141.45
     47              47.349       285.66         0.0015298        125.4
-\end{verbatim} \color{black}
+\end{verbatim}
 \subsection{Plots}
 \subsubsection{Temperature vs Geopotential Altitude}
 \includegraphics [height=3in]{graph1.png}
@@ -224,6 +206,8 @@ This section will contain the code used to generate the standard atmosphere tabl
 
 \section{Discussion}
 \subsection{Analysis}
-\subsection{Challenges}
+The geometric height is fairly close to the geopotential height, as throughout the table, the geometric height varies from the geopotential height by a small amount. As visible on the graphs, temperature changes differently from either density or pressure. Temperature starts at a constant value at sea level, then decreases linearly through the troposphere, hits a value of $216.66\ K$ in the isothermal layer, and rises linearly through the stratosphere at a different lapse rate. The density and pressure both decrease fairly smoothly throughout the layers, albeit at different rates to each other, and different rates through the gradient and isothermal layers. The graphs overall show that the air temperature decreases the farther you get from the surface of the earth, but then warms as the atmosphere thins and the air is more directly heated by the sun. The density and pressure of the air both decrease sharply when coming off the Earth, but then decrease at a steadier rate the further off the Earth they get until they'd eventually reach a point where the atmosphere is negligible.
 
+\subsection{Challenges}
+This project, as beautiful as it may look, actually took me quite a bit of effort both in coding the MATLAB file, writing this \LaTeX\ document, and uploading it to a GitHub repository. One of the challenges I faced was the formatting on the table of values while using the array2table() function. The spacing for the column headers had a smaller maximum width than the width of the names I had originally planned to use, so I had to create separate strings with shorter names that would fit into the table. I also had some issue with indexing, as my initial draft of the code read the initial row as row 0 when it should have been row 1, which was resolved by writing to the array at the value of the for loop plus one. When writing the \LaTeX\ document, I had a lot of issues with properly formatting the equation and had to look up a good amount of how to type what I was typing. When working with the GitHub repository (available at \url{https://github.com/himam99/AERE161-Project1}), I was mostly reliant on GitHub's cheet sheet, and had some issues pushing to GitHub, so I had to Google that as well. Overall, aside from some minor coding issues, the project wasn't too difficult to complete, if a bit tedious. 
 \end{document}
